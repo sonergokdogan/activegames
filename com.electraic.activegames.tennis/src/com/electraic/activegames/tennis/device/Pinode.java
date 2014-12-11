@@ -6,89 +6,66 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.electraic.activegames.tennis.device.Device.LightColor;
+import com.electraic.activegames.tennis.device.Device.Role;
+import com.electraic.activegames.tennis.device.Device.State;
+import com.pi4j.io.gpio.GpioPin;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 
-public class Pinode { // implements MQTT {
+public class Pinode implements DeviceListener { // implements MQTT {
 
-	ArrayList<Led> leds = new ArrayList<Led>();
-	ArrayList<Button> buttons = new ArrayList<Button>();
-	ArrayList<Sound> sounds = new ArrayList<Sound>();
+//	ArrayList<Led> leds = new ArrayList<Led>();
+//	ArrayList<Button> buttons = new ArrayList<Button>();
+//	ArrayList<Sound> sounds = new ArrayList<Sound>();
 
+	public Pinode() {
+		// TODO Auto-generated constructor stub
+		Led led = new Led();
+		led.setRole(Role.SUCCESS);
+		led.setPin(RaspiPin.GPIO_02);
+		led.setFriendlyName("Pinode 1 Success Led");
+		
+		Button button = new Button();
+		button.setPin(RaspiPin.GPIO_03);
+		button.setFriendlyName("Pinode 1 Button");
+		button.addObserver(this);
+		
+	}
+	ArrayList<Device> devices = new ArrayList<Device>();
 	short pinodeId;
 
-	public enum States {
-		stIDLE, stHITWAIT, stSUCCESSFULHIT, stFALSEHIT, stTIMEOUT
-	};
+	State state;
 
-	public void changeState(States state) {
+	public void changeState(State state) {
 
-		setStateOfLeds(state);
-		setStateOfButtons(state);
-		setStateOfSound(state);
-	}
-
-	private void setStateOfLeds(States state) {
-
-		for (Led led : this.leds) {
-
-			switch (state) {
-			case stIDLE:
-				break;
-			case stFALSEHIT:
-				break;
-			case stHITWAIT:
-				break;
-			case stSUCCESSFULHIT:
-				break;
-			case stTIMEOUT:
-				break;
-			default:
-				break;
-
-			}
+		this.state = state;
+		for (Device device : devices) {
+			device.setState(state);
 		}
 	}
 
-	private void setStateOfButtons(States state) {
-
-		for (Button button : this.buttons) {
-
-			switch (state) {
-			case stIDLE:
-				break;
-			case stFALSEHIT:
-				break;
-			case stHITWAIT:
-				break;
-			case stSUCCESSFULHIT:
-				break;
-			case stTIMEOUT:
-				break;
-			default:
-				break;
-
-			}
+	@Override
+	public void notifyButtonChange(Pin pin, PinState pinState) {
+		// TODO Auto-generated method stub
+		switch(this.state) {
+		case stIDLE: this.changeState(State.stFALSEHIT);
+		break;
+		case stFALSEHIT:
+			break;
+		case stHITWAIT: this.changeState(State.stSUCCESSFULHIT);
+			break;
+		case stSUCCESSFULHIT:
+			break;
+		case stTIMEOUT: 
+			break;
+		default:
+			break;
+		
 		}
 	}
-	
-	private void setStateOfSound(States state) {
 
-		for (Sound sound : this.sounds) {
-
-			switch (state) {
-			case stIDLE:
-				break;
-			case stFALSEHIT:
-				break;
-			case stHITWAIT:
-				break;
-			case stSUCCESSFULHIT:
-				break;
-			case stTIMEOUT:
-				break;
-			default:
-				break;
-
-			}
-		}
+	public void feedback() {
+		//This function is to feed the current status to the game management
 	}
 }
