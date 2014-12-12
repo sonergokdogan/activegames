@@ -1,39 +1,46 @@
 <project default="dist">
-<property name="src" location="src"/>
-  <property name="build" location="build"/>
-  <property name="dist"  location="dist"/>
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
 
-  <target name="init">
-    <!-- Create the time stamp -->
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
-  </target>
+	<property name="ctlib.dir" value="/Users/soner/Documents/workspace/raspberry/pi4j-1.0-SNAPSHOT/lib" />
 
-  <target name="compile" depends="init"
-        description="compile the source " >
-    <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${src}" destdir="${build}"/>
-  </target>
+	<path id="classpath">
+		<fileset dir="${ctlib.dir}" includes="**/*.jar" />
+	</path>
 
-  <target name="dist" depends="compile"
-        description="generate the distribution" >
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dist}/lib"/>
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
 
-    <!-- Put everything in ${build} into the tennis-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/lib/tennis-${DSTAMP}.jar" basedir="${build}"/>
-  </target>
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" includeantruntime="false" classpathref="classpath" />
+	</target>
 
-  <target name="clean"
-        description="clean up" >
-    <!-- Delete the ${build} and ${dist} directory trees -->
-    <delete dir="${build}"/>
-    <delete dir="${dist}"/>
-  </target>
-<jar destfile="build/tennis.jar">
-  <manifest>
-    <attribute name="Main-Class" value="com.electraic.activegames.tennis.game.Scene"/>
-  </manifest>
-</jar>
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/bin" />
+		<!-- Put everything in ${build} into the tennis-${DSTAMP}.jar file -->
+		<jar destfile="tennis.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="com.electraic.activegames.tennis.game.Scene" />
+				<attribute name="Class-Path" value="pi4j-core.jar pi4j-device.jar pi4j-gpio-extension.jar pi4j-service.jar" />
+			</manifest>
+		</jar>
+
+	<!--	<manifest>
+			<attribute name="Main-Class" value="com.electraic.activegames.tennis.game.Scene" />
+		</manifest>
+		<jar jarfile="${dist}/lib/tennis.jar" basedir="${build}" /> -->
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
 </project>
