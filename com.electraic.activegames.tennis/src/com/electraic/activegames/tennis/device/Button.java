@@ -2,6 +2,7 @@ package com.electraic.activegames.tennis.device;
 
 import java.util.Vector;
 
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -12,7 +13,8 @@ public class Button extends Device implements DeviceAction, GpioPinListenerDigit
 	PinState buttonState;
 	Vector<DeviceListener> listeners = new Vector<DeviceListener>();
 	
-	public Button() {
+	public Button(Pin pin) {
+		super(pin);
 		// TODO Auto-generated constructor stub
 		this.digitalInput = this.getGpioController().provisionDigitalInputPin(this.pin, PinPullResistance.PULL_DOWN);
 		this.digitalInput.addListener(this);

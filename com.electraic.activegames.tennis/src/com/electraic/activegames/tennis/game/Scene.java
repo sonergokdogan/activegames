@@ -6,17 +6,18 @@ import com.electraic.activegames.tennis.device.Device.State;
 public class Scene {
 
 	public static void main(String[] args) {
+		System.out.println("Starting Scene");
 		Pinode p = new Pinode();
-		p.changeState(State.stIDLE);
+		p.setState(State.stIDLE);
 		try {
 			Thread.sleep(5000);
-			p.changeState(State.stHITWAIT);
+			p.setState(State.stHITWAIT);
 			Thread.sleep(5000);
-			p.changeState(State.stHITWAIT);
+			p.setState(State.stHITWAIT);
 			Thread.sleep(5000);
-			p.changeState(State.stHITWAIT);
+			p.setState(State.stHITWAIT);
 			Thread.sleep(5000);
-			p.changeState(State.stHITWAIT);
+			p.setState(State.stHITWAIT);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
